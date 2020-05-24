@@ -9,7 +9,7 @@ Trimmomatic
 ###############
 */
 
-process runTrimmomatic {
+process trimmomatic {
     publishDir 'results/trimmomatic'
     container 'quay.io/biocontainers/trimmomatic:0.35--6'
 
