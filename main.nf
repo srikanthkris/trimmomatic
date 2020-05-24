@@ -3,6 +3,12 @@ Channel.fromFilePairs("./*_{R1,R2}.fastq")
         .into { ch_in_trimmomatic }
 
 
+/*
+###############
+Trimmomatic
+###############
+*/
+
 process runTrimmomatic {
     publishDir 'results/trimmomatic'
     container 'quay.io/biocontainers/trimmomatic:0.35--6'
