@@ -1,3 +1,14 @@
+#!/usr/bin/env nextflow
+
+/*
+################
+params
+################
+*/
+
+
+params.saveBy = 'copy'
+
 
 Channel.fromFilePairs("./*_{R1,R2}.fastq")
         .into { ch_in_trimmomatic }
@@ -10,12 +21,11 @@ Trimmomatic
 */
 
 process trimmomatic {
-    publishDir 'results/trimmomatic'
+    publishDir 'results/trimmomatic', mode: params.saveBy
     container 'quay.io/biocontainers/trimmomatic:0.35--6'
 
-
     input:
-    tuple genomeName, path(fq_1), path(fq_2) from ch_in_trimmomatic
+    tuple genomeName, file(genomeReads) from ch_in_trimmomatic
 
     output:
     tuple  path(fq_1_paired), path(fq_1_unpaired), path(fq_2_paired), path(fq_2_unpaired) into ch_out_trimmomatic
