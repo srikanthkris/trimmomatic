@@ -40,8 +40,8 @@ process trimmomatic {
     """
     trimmomatic \
     PE -phred33 \
-    $fq_1 \
-    $fq_2 \
+    ${genomeReads[0]} \
+    ${genomeReads[1]} \
     $fq_1_paired \
     $fq_1_unpaired \
     $fq_2_paired \
