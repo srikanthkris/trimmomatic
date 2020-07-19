@@ -37,13 +37,13 @@ process gzip {
     container 'abhi18av/biodragao_base'
 
     input:
-    set genomeFileName, file(genomeReads) from ch_in_gzip
+    set genomeName, file(genomeReads) from ch_in_gzip
 
     output:
-    tuple path(genome_1_fq), path(genome_2_fq) into ch_in_trimmomatic
+    tuple genomeName, path(genome_1_fq), path(genome_2_fq) into ch_in_trimmomatic
 
     script:
-    outputExtension = params.trimmed ? '.p.fastq' : '.fastq'
+    outputExtension = '.fastq'
     
     // rename the output files
     genome_1_fq = genomeReads[0].name.split("\\.")[0] + outputExtension
@@ -54,12 +54,12 @@ process gzip {
     gzip -dc ${genomeReads[1]} > ${genome_2_fq}
     """
 
-        }
+    }
         
 } else {
 
 
-Channel.fromFilePairs(inputFilePattern)
+Channel.fromFilePairs(inputFilePattern, flat: true)
         .into { ch_in_trimmomatic }
 
 }
@@ -75,7 +75,7 @@ process trimmomatic {
     container 'quay.io/biocontainers/trimmomatic:0.35--6'
 
     input:
-    tuple genomeName, file(genomeReads) from ch_in_trimmomatic
+    tuple genomeName, path(genome_1_fq), path(genome_2_fq) from ch_in_trimmomatic
 
     output:
     tuple  path(fq_1_paired_gzip), path(fq_2_paired_gzip) into ch_out_trimmomatic
