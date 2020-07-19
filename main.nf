@@ -35,7 +35,6 @@ Channel.fromFilePairs(inputFilePattern)
 
 process gzip {
     container 'abhi18av/biodragao_base'
-    publishDir 'results/gzip', mode: params.saveBy
 
     input:
     set genomeFileName, file(genomeReads) from ch_in_gzip
