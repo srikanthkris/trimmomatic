@@ -8,14 +8,62 @@ params
 
 
 params.saveBy= 'copy'
-params.compress= true
+params.compressedInput= true
 params.deleteOriginal= false
 params.resultsDir= 'results/trimmomatic'
 
 
-Channel.fromFilePairs("./*_{R1,R2}.fastq")
+
+compressedInputFilePattern = "./*_{R1,R2}.fastq.gz"
+decompressedInputFilePattern = "./*_{R1,R2}.fastq"
+
+inputFilePattern = params.compressedInput ? compressedInputFilePattern : decompressedInputFilePattern
+
+
+/*
+################
+gunzip these files
+################
+*/
+
+
+if(params.compressedInput) {
+
+Channel.fromFilePairs(inputFilePattern)
+        .into { ch_in_gzip }
+
+
+process gzip {
+    container 'abhi18av/biodragao_base'
+    publishDir 'results/gzip', mode: params.saveBy
+
+    input:
+    set genomeFileName, file(genomeReads) from ch_in_gzip
+
+    output:
+    tuple path(genome_1_fq), path(genome_2_fq) into ch_in_trimmomatic
+
+    script:
+    outputExtension = params.trimmed ? '.p.fastq' : '.fastq'
+    
+    // rename the output files
+    genome_1_fq = genomeReads[0].name.split("\\.")[0] + outputExtension
+    genome_2_fq = genomeReads[1].name.split("\\.")[0] + outputExtension
+
+    """
+    gzip -dc ${genomeReads[0]} > ${genome_1_fq} 
+    gzip -dc ${genomeReads[1]} > ${genome_2_fq}
+    """
+
+        }
+        
+} else {
+
+
+Channel.fromFilePairs(inputFilePattern)
         .into { ch_in_trimmomatic }
 
+}
 
 /*
 ###############
@@ -61,7 +109,9 @@ process trimmomatic {
     gzip ${fq_2_paired} > ${fq_2_paired_gzip} 
     
     """
+    
 }
+
 
 
 if(params.deleteOriginal) {
