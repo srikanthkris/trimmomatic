@@ -104,8 +104,8 @@ process trimmomatic {
     $fq_2_unpaired \
     LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
     
-    gzip ${fq_1_paired} > ${fq_1_paired_gzip} 
-    gzip ${fq_2_paired} > ${fq_2_paired_gzip} 
+    gzip ${fq_1_paired}  
+    gzip ${fq_2_paired} 
     
     """
     
