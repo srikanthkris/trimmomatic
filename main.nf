@@ -26,7 +26,7 @@ gunzip these files
 ################
 */
 
-
+// TODO find a way to simply compose this declaratively
 if(params.compressedInput) {
 
 Channel.fromFilePairs(inputFilePattern)
@@ -96,8 +96,8 @@ process trimmomatic {
     """
     trimmomatic \
     PE -phred33 \
-    ${genomeReads[0]} \
-    ${genomeReads[1]} \
+    ${genome_1_fq} \
+    ${genome_2_fq} \
     $fq_1_paired \
     $fq_1_unpaired \
     $fq_2_paired \
@@ -112,7 +112,7 @@ process trimmomatic {
 }
 
 
-
+//TODO
 if(params.deleteOriginal) {
 
 process trimmomatic_deleteOriginal {
