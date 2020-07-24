@@ -1,11 +1,17 @@
 #!/usr/bin/env nextflow
 
 /*
-################
-params
-################
+#==============================================
+code documentation
+#==============================================
 */
 
+
+/*
+#==============================================
+params
+#==============================================
+*/
 
 params.saveBy = 'copy'
 
@@ -15,9 +21,9 @@ Channel.fromFilePairs("./*_{R1,R2}.fastq")
 
 
 /*
-###############
-Trimmomatic
-###############
+#==============================================
+trimmomatic
+#==============================================
 */
 
 process trimmomatic {
@@ -28,7 +34,7 @@ process trimmomatic {
     tuple genomeName, file(genomeReads) from ch_in_trimmomatic
 
     output:
-    tuple  path(fq_1_paired), path(fq_2_paired) into ch_out_trimmomatic
+    tuple path(fq_1_paired), path(fq_2_paired) into ch_out_trimmomatic
 
     script:
 
