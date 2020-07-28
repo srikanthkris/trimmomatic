@@ -15,6 +15,7 @@ params
 
 params.saveMode = 'copy'
 params.filePattern = "./*_{R1,R2}.fastq.gz"
+params.resultsDir = 'results/trimmomatic'
 
 Channel.fromFilePairs(params.filePattern)
         .into { ch_in_trimmomatic }
@@ -27,7 +28,8 @@ trimmomatic
 */
 
 process trimmomatic {
-    publishDir 'results/trimmomatic', mode: params.saveMode
+
+    publishDir params.resultsDir, mode: params.saveMode
     container 'quay.io/biocontainers/trimmomatic:0.35--6'
 
     input:
