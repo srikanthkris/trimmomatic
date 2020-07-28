@@ -13,10 +13,10 @@ params
 #==============================================
 */
 
-params.saveBy = 'copy'
+params.saveMode = 'copy'
+params.filePattern = "./*_{R1,R2}.fastq.gz"
 
-
-Channel.fromFilePairs("./*_{R1,R2}.fastq")
+Channel.fromFilePairs(params.filePattern)
         .into { ch_in_trimmomatic }
 
 
@@ -27,7 +27,7 @@ trimmomatic
 */
 
 process trimmomatic {
-    publishDir 'results/trimmomatic', mode: params.saveBy
+    publishDir 'results/trimmomatic', mode: params.saveMode
     container 'quay.io/biocontainers/trimmomatic:0.35--6'
 
     input:
